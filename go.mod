@@ -1,4 +1,4 @@
-module github.com/nordew/GoChit-Chat-External
+module github.com/nordew/GoChitChat-External
 
 go 1.21.4
 
