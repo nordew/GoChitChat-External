@@ -29,15 +29,15 @@ enum Role {
 }
 
 message CreateUserResponse {
-  int64 id = 1;
+  string id = 1;
 }
 
 message GetUserRequest {
-  int64 id = 1;
+  string id = 1;
 }
 
 message GetUserResponse {
-  int64 id = 1;
+  string id = 1;
   string email = 2;
   Role role = 3;
   google.protobuf.Timestamp created_at = 4;
