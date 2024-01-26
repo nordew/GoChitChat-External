@@ -8,13 +8,18 @@ import (
 )
 
 type Config struct {
-	PGConfig PGConfig
+	PGConfig   PGConfig
+	GRPCConfig GRPCConfig
 
 	Salt string
 }
 
 type PGConfig struct {
 	ConnectionString string `env:"PG_CONNECTION_STRING"`
+}
+
+type GRPCConfig struct {
+	Adress string `env:"GRPC_ADRESS"`
 }
 
 var (
