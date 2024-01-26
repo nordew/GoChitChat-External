@@ -9,14 +9,12 @@ import (
 
 type Config struct {
 	PGConfig PGConfig
+
+	Salt string
 }
 
 type PGConfig struct {
-	Host     string `env:"PG_HOST"`
-	Port     int    `env:"PG_PORT"`
-	User     string `env:"PG_USER"`
-	Password string `env:"PG_PASSWORD"`
-	DBName   string `env:"PG_DB_NAME"`
+	ConnectionString string `env:"PG_CONNECTION_STRING"`
 }
 
 var (
