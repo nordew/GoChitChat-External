@@ -11,7 +11,7 @@ type Config struct {
 	PGConfig   PGConfig
 	GRPCConfig GRPCConfig
 
-	Salt string
+	Salt string `env:"SALT"`
 }
 
 type PGConfig struct {
@@ -19,7 +19,7 @@ type PGConfig struct {
 }
 
 type GRPCConfig struct {
-	Adress string `env:"GRPC_ADRESS"`
+	Address string `env:"GRPC_ADDRESS"`
 }
 
 var (
