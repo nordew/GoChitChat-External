@@ -40,7 +40,7 @@ message GetUserResponse {
 
 message UpdateUserRequest {
   string email = 1;
-  google.protobuf.StringValue name = 3;
+  google.protobuf.StringValue name = 2;
   string password = 3;
 }
 
