@@ -48,7 +48,6 @@ message UpdateUserRequest {
 }
 
 message DeleteUserRequest{
-  string email = 1;
-  string password = 2;
+  string id = 1;
 }
 
