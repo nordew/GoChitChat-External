@@ -19,7 +19,7 @@ type PGConfig struct {
 }
 
 type GRPCConfig struct {
-	Address string `env:"GRPC_ADDRESS"`
+	Port int `env:"GRPC_ADDRESS"`
 }
 
 var (
