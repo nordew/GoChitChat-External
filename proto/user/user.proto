@@ -42,8 +42,9 @@ message UpdateUserRequest {
   string id = 1;
   string email = 2;
   google.protobuf.StringValue name = 3;
-  google.protobuf.StringValue new_password = 4;
-  google.protobuf.StringValue old_password = 5;
+  bool password = 4;
+  google.protobuf.StringValue new_password = 5;
+  google.protobuf.StringValue old_password = 6;
 }
 
 message DeleteUserRequest{
