@@ -45,7 +45,7 @@ message GetUserResponse {
 
 message UpdateUserRequest {
   string id = 1;
-  string email = 2;
+  google.protobuf.StringValue email = 2;
   google.protobuf.StringValue name = 3;
   bool password = 4;
   google.protobuf.StringValue new_password = 5;
