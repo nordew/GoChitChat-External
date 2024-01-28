@@ -27,6 +27,8 @@ type UserClient interface {
 	Get(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	Update(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Login(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
+	Refresh(ctx context.Context, in *RefreshUserRequest, opts ...grpc.CallOption) (*RefreshUserResponse, error)
 }
 
 type userClient struct {
@@ -73,6 +75,24 @@ func (c *userClient) Delete(ctx context.Context, in *DeleteUserRequest, opts ...
 	return out, nil
 }
 
+func (c *userClient) Login(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error) {
+	out := new(LoginUserResponse)
+	err := c.cc.Invoke(ctx, "/user.User/Login", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) Refresh(ctx context.Context, in *RefreshUserRequest, opts ...grpc.CallOption) (*RefreshUserResponse, error) {
+	out := new(RefreshUserResponse)
+	err := c.cc.Invoke(ctx, "/user.User/Refresh", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -81,6 +101,8 @@ type UserServer interface {
 	Get(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	Update(context.Context, *UpdateUserRequest) (*emptypb.Empty, error)
 	Delete(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
+	Login(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
+	Refresh(context.Context, *RefreshUserRequest) (*RefreshUserResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -99,6 +121,12 @@ func (UnimplementedUserServer) Update(context.Context, *UpdateUserRequest) (*emp
 }
 func (UnimplementedUserServer) Delete(context.Context, *DeleteUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedUserServer) Login(context.Context, *LoginUserRequest) (*LoginUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedUserServer) Refresh(context.Context, *RefreshUserRequest) (*RefreshUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -185,6 +213,42 @@ func _User_Delete_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.User/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Login(ctx, req.(*LoginUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Refresh(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.User/Refresh",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Refresh(ctx, req.(*RefreshUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -207,6 +271,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _User_Delete_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _User_Login_Handler,
+		},
+		{
+			MethodName: "Refresh",
+			Handler:    _User_Refresh_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
