@@ -29,6 +29,7 @@ type UserClient interface {
 	Delete(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Login(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 	Refresh(ctx context.Context, in *RefreshUserRequest, opts ...grpc.CallOption) (*RefreshUserResponse, error)
+	ParseAccessToken(ctx context.Context, in *ParseAccessTokenRequest, opts ...grpc.CallOption) (*ParseAccessTokenResponse, error)
 }
 
 type userClient struct {
@@ -93,6 +94,15 @@ func (c *userClient) Refresh(ctx context.Context, in *RefreshUserRequest, opts .
 	return out, nil
 }
 
+func (c *userClient) ParseAccessToken(ctx context.Context, in *ParseAccessTokenRequest, opts ...grpc.CallOption) (*ParseAccessTokenResponse, error) {
+	out := new(ParseAccessTokenResponse)
+	err := c.cc.Invoke(ctx, "/user.User/ParseAccessToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -103,6 +113,7 @@ type UserServer interface {
 	Delete(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
 	Login(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	Refresh(context.Context, *RefreshUserRequest) (*RefreshUserResponse, error)
+	ParseAccessToken(context.Context, *ParseAccessTokenRequest) (*ParseAccessTokenResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -127,6 +138,9 @@ func (UnimplementedUserServer) Login(context.Context, *LoginUserRequest) (*Login
 }
 func (UnimplementedUserServer) Refresh(context.Context, *RefreshUserRequest) (*RefreshUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
+}
+func (UnimplementedUserServer) ParseAccessToken(context.Context, *ParseAccessTokenRequest) (*ParseAccessTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ParseAccessToken not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -249,6 +263,24 @@ func _User_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ParseAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ParseAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ParseAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.User/ParseAccessToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ParseAccessToken(ctx, req.(*ParseAccessTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -279,6 +311,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Refresh",
 			Handler:    _User_Refresh_Handler,
+		},
+		{
+			MethodName: "ParseAccessToken",
+			Handler:    _User_ParseAccessToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -16,6 +16,7 @@ service User {
 
   rpc Login(LoginUserRequest) returns (LoginUserResponse);
   rpc Refresh(RefreshUserRequest) returns (RefreshUserResponse);
+  rpc ParseAccessToken(ParseAccessTokenRequest) returns (ParseAccessTokenResponse);
 }
 
 message CreateUserRequest {
@@ -73,4 +74,13 @@ message RefreshUserRequest {
 message RefreshUserResponse {
   string access_token = 1;
   string refresh_token = 2;
+}
+
+message ParseAccessTokenRequest {
+  string token = 1;
+}
+
+message ParseAccessTokenResponse {
+  string UserID = 1;
+  string Name = 2; 
 }
