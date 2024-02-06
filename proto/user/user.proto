@@ -51,6 +51,7 @@ message UpdateUserRequest {
   bool password = 4;
   google.protobuf.StringValue new_password = 5;
   google.protobuf.StringValue old_password = 6;
+  google.protobuf.BytesValue image = 7;
 }
 
 message DeleteUserRequest{
