@@ -26,6 +26,7 @@ type UserClient interface {
 	Create(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	Get(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	Update(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateImage(ctx context.Context, in *UpdateImageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Login(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 	Refresh(ctx context.Context, in *RefreshUserRequest, opts ...grpc.CallOption) (*RefreshUserResponse, error)
@@ -61,6 +62,15 @@ func (c *userClient) Get(ctx context.Context, in *GetUserRequest, opts ...grpc.C
 func (c *userClient) Update(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/user.User/Update", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateImage(ctx context.Context, in *UpdateImageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/user.User/UpdateImage", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -110,6 +120,7 @@ type UserServer interface {
 	Create(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	Get(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	Update(context.Context, *UpdateUserRequest) (*emptypb.Empty, error)
+	UpdateImage(context.Context, *UpdateImageRequest) (*emptypb.Empty, error)
 	Delete(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
 	Login(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	Refresh(context.Context, *RefreshUserRequest) (*RefreshUserResponse, error)
@@ -129,6 +140,9 @@ func (UnimplementedUserServer) Get(context.Context, *GetUserRequest) (*GetUserRe
 }
 func (UnimplementedUserServer) Update(context.Context, *UpdateUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedUserServer) UpdateImage(context.Context, *UpdateImageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateImage not implemented")
 }
 func (UnimplementedUserServer) Delete(context.Context, *DeleteUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
@@ -205,6 +219,24 @@ func _User_Update_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).Update(ctx, req.(*UpdateUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.User/UpdateImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateImage(ctx, req.(*UpdateImageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -299,6 +331,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Update",
 			Handler:    _User_Update_Handler,
+		},
+		{
+			MethodName: "UpdateImage",
+			Handler:    _User_UpdateImage_Handler,
 		},
 		{
 			MethodName: "Delete",

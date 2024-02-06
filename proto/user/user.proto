@@ -12,6 +12,7 @@ service User {
   rpc Create(CreateUserRequest) returns (CreateUserResponse);
   rpc Get(GetUserRequest) returns (GetUserResponse);
   rpc Update(UpdateUserRequest) returns (google.protobuf.Empty);
+  rpc UpdateImage(UpdateImageRequest) returns (google.protobuf.Empty);
   rpc Delete(DeleteUserRequest) returns (google.protobuf.Empty);
 
   rpc Login(LoginUserRequest) returns (LoginUserResponse);
@@ -51,8 +52,6 @@ message UpdateUserRequest {
   bool password = 4;
   google.protobuf.StringValue new_password = 5;
   google.protobuf.StringValue old_password = 6;
-  bool image = 7;
-  google.protobuf.BytesValue new_image = 8;
 }
 
 message DeleteUserRequest{
@@ -85,4 +84,8 @@ message ParseAccessTokenRequest {
 message ParseAccessTokenResponse {
   string UserID = 1;
   string Name = 2; 
+}
+
+message UpdateImageRequest {
+  bytes image = 1;
 }
